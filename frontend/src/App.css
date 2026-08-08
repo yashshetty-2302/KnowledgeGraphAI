@@ -231,3 +231,23 @@ h4 {
   margin-top: 0.5rem;
   font-size: 0.875rem;
 }
+
+.self-correction-info {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  border-left: 4px solid #ffc107;
+}
+
+.insufficient-evidence-warning {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  border-left: 4px solid #dc3545;
+}

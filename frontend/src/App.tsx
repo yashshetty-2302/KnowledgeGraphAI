@@ -131,6 +131,19 @@ function App() {
           {queryResponse && (
             <div className="response-area">
               <h3>Answer</h3>
+              
+              {queryResponse.self_corrected && (
+                <p className="self-correction-info">
+                  Initial retrieval was insufficient — query reformulated and searched again.
+                </p>
+              )}
+              
+              {!queryResponse.evidence_sufficient && (
+                <p className="insufficient-evidence-warning">
+                  Could not find sufficient evidence in uploaded documents.
+                </p>
+              )}
+              
               <div className="answer-text">{queryResponse.answer}</div>
               
               {queryResponse.citations.length > 0 && (
@@ -150,7 +163,7 @@ function App() {
               )}
               
               <p className="chunks-info">
-                Retrieved {queryResponse.retrieved_chunks} chunks
+                Retrieved {queryResponse.retrieved_chunks} chunks in {queryResponse.retrieval_attempts} retrieval attempt{queryResponse.retrieval_attempts !== 1 ? 's' : ''}
               </p>
             </div>
           )}

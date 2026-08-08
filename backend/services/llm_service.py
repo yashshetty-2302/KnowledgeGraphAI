@@ -39,6 +39,30 @@ class LLMService:
             "retrieved_chunks": len(context_chunks)
         }
     
+    def generate_json_response(self, prompt: str) -> Dict:
+        """Generate structured JSON response."""
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": "You are a structured data assistant. Respond only with valid JSON."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.1,
+            max_tokens=200,
+            response_format={"type": "json_object"}
+        )
+        
+        import json
+        return json.loads(response.choices[0].message.content)
+    
+    def generate_insufficient_response(self, retrieved_chunks: int = 0) -> Dict:
+        """Generate response for insufficient evidence case."""
+        return {
+            "answer": "I couldn't find sufficient evidence in the uploaded documents to answer this question. The documents may not contain the specific information you're looking for.",
+            "citations": [],
+            "retrieved_chunks": retrieved_chunks
+        }
+    
     def _build_context(self, chunks: List[Dict]) -> str:
         """Build context string from chunks."""
         context_parts = []

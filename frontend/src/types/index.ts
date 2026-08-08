@@ -17,6 +17,9 @@ export interface QueryResponse {
   answer: string;
   citations: Citation[];
   retrieved_chunks: number;
+  retrieval_attempts: number;
+  self_corrected: boolean;
+  evidence_sufficient: boolean;
 }
 
 export interface QueryRequest {

@@ -36,6 +36,9 @@ class QueryResponse(BaseModel):
     answer: str
     citations: List[Citation]
     retrieved_chunks: int
+    retrieval_attempts: int
+    self_corrected: bool
+    evidence_sufficient: bool
 
 class HealthResponse(BaseModel):
     status: str
