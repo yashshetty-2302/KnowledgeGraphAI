@@ -1,0 +1,42 @@
+from pydantic import BaseModel
+from typing import List, Optional
+from datetime import datetime
+
+class DocumentUploadResponse(BaseModel):
+    id: int
+    filename: str
+    original_filename: str
+    upload_date: datetime
+    total_pages: int
+    total_chunks: int
+    
+    class Config:
+        from_attributes = True
+
+class DocumentListResponse(BaseModel):
+    id: int
+    filename: str
+    original_filename: str
+    upload_date: datetime
+    total_pages: int
+    total_chunks: int
+    
+    class Config:
+        from_attributes = True
+
+class Citation(BaseModel):
+    document: str
+    page: int
+    chunk_id: str
+
+class QueryRequest(BaseModel):
+    question: str
+
+class QueryResponse(BaseModel):
+    answer: str
+    citations: List[Citation]
+    retrieved_chunks: int
+
+class HealthResponse(BaseModel):
+    status: str
+    message: str
