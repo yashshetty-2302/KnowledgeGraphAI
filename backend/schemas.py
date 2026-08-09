@@ -42,6 +42,8 @@ class QueryResponse(BaseModel):
     graph_used: bool = False
     graph_entities: List[str] = []
     graph_relationships: List[str] = []
+    security_status: str = "safe"
+    flagged_chunks: int = 0
 
 class HealthResponse(BaseModel):
     status: str
