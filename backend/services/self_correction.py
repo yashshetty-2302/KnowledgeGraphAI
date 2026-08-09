@@ -7,7 +7,7 @@ from config import Config
 class SelfCorrectionService:
     def __init__(self):
         self.llm_service = LLMService()
-        self.distance_threshold = 2.0  # Maximum distance for considering a chunk relevant
+        self.distance_threshold = 3.0  # Maximum distance for considering a chunk relevant (increased from 2.0)
     
     def check_lexical_overlap(self, question: str, chunks: List[Dict]) -> Tuple[bool, str]:
         """
@@ -36,7 +36,8 @@ class SelfCorrectionService:
         
         overlap_ratio = overlap_count / len(important_words) if important_words else 0
         
-        if overlap_ratio >= 0.3:  # At least 30% of important words should appear
+        # More lenient lexical overlap check
+        if overlap_ratio >= 0.2:  # At least 20% of important words should appear
             return True, f"Found {overlap_count}/{len(important_words)} important words in chunks."
         else:
             return False, f"Only found {overlap_count}/{len(important_words)} important words in chunks. Low lexical overlap."
@@ -54,13 +55,14 @@ class SelfCorrectionService:
         # Check if the best result is within threshold
         best_distance = distances[0][0] if len(distances) > 0 else float('inf')
         
-        if best_distance > self.distance_threshold:
+        # More lenient distance threshold
+        if best_distance > 3.0:  # Increased from 2.0 to 3.0
             return False, f"Best result distance {best_distance:.2f} exceeds threshold {self.distance_threshold}."
         
         # Check if most results are within reasonable range
         avg_distance = distances[0].mean() if len(distances) > 0 else float('inf')
         
-        if avg_distance > self.distance_threshold * 1.5:
+        if avg_distance > self.distance_threshold * 2.0:  # Increased from 1.5 to 2.0
             return False, f"Average distance {avg_distance:.2f} too high."
         
         return True, f"Best distance {best_distance:.2f} within threshold."
@@ -86,11 +88,11 @@ Context:
 
 Question: {question}
 
-Evaluate strictly: Does the provided context contain explicit, direct evidence that answers the user's question?
-- The evidence must be DIRECTLY stated in the context
-- If the context mentions related topics but doesn't answer the specific question, mark as insufficient
-- If the question asks about specific terms (like "pet insurance", "gym membership", etc.) that are not mentioned in the context, mark as insufficient
-- If the answer requires information not present in the context, mark as insufficient
+Evaluate: Does the provided context contain relevant information that can help answer the user's question?
+- The evidence should be directly or indirectly stated in the context
+- If the context mentions the topic and provides relevant information, mark as sufficient
+- If the context only contains completely unrelated information, mark as insufficient
+- Be reasonable - if the context contains relevant keywords and concepts, consider it sufficient
 
 Return JSON with "sufficient" (boolean) and "reason" (string) fields."""
 
