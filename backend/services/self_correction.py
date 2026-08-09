@@ -1,5 +1,6 @@
 from typing import List, Dict, Tuple
 import re
+import numpy as np
 from services.llm_service import LLMService
 from config import Config
 

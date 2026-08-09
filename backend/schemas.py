@@ -39,6 +39,9 @@ class QueryResponse(BaseModel):
     retrieval_attempts: int
     self_corrected: bool
     evidence_sufficient: bool
+    graph_used: bool = False
+    graph_entities: List[str] = []
+    graph_relationships: List[str] = []
 
 class HealthResponse(BaseModel):
     status: str

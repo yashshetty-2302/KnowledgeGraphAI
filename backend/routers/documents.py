@@ -7,6 +7,7 @@ from schemas import DocumentUploadResponse, DocumentListResponse
 from services.document_processor import DocumentProcessor
 from services.embedding_service import EmbeddingService
 from services.vector_store import VectorStore
+from services.graph_service import GraphService
 import os
 import shutil
 from datetime import datetime
@@ -18,6 +19,7 @@ router = APIRouter()
 _processor = None
 _embedding_service = None
 _vector_store = None
+_graph_service = None
 
 def get_processor():
     global _processor
@@ -36,6 +38,12 @@ def get_vector_store():
     if _vector_store is None:
         _vector_store = VectorStore()
     return _vector_store
+
+def get_graph_service():
+    global _graph_service
+    if _graph_service is None:
+        _graph_service = GraphService()
+    return _graph_service
 
 @router.post("/upload", response_model=DocumentUploadResponse)
 async def upload_document(
@@ -69,6 +77,10 @@ async def upload_document(
         # Add to vector store
         vector_store = get_vector_store()
         vector_store.add_chunks(embeddings, result["chunks"])
+        
+        # Add to knowledge graph
+        graph_service = get_graph_service()
+        graph_service.add_document_to_graph(result["chunks"], file.filename)
         
         # Save to database
         db_document = Document(

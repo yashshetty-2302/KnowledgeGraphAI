@@ -20,6 +20,9 @@ export interface QueryResponse {
   retrieval_attempts: number;
   self_corrected: boolean;
   evidence_sufficient: boolean;
+  graph_used: boolean;
+  graph_entities: string[];
+  graph_relationships: string[];
 }
 
 export interface QueryRequest {
